@@ -20,14 +20,27 @@ const scene = new THREE.Scene();
 
 // creatig a parameters object that will contain all the parameters of our galaxy
 const parameters = {};
-parameters.count = 1000;
-parameters.size = 0.02;
+parameters.count = 100000;
+parameters.size = 0.01;
+
+let geometry = null;
+let material = null;
+let points = null;
 
 // creating a generateGalaxy function for creating galaxy
 
 const generateGalaxy = () => {
+  // Before assigning these variables, we can test if they already exist and use the dispose(...) method
+  // to destroy the geometry and the material properly.
+  // Then remove the points from the scene with remove()
+
+  if (points !== null) {
+    geometry.dispose();
+    material.dispose();
+    scene.remove(points);
+  }
   // ######## Geometry ########
-  const geometry = new THREE.BufferGeometry();
+  geometry = new THREE.BufferGeometry();
 
   const positions = new Float32Array(parameters.count * 3);
 
@@ -43,7 +56,7 @@ const generateGalaxy = () => {
 
   // ######## Material ########
 
-  const material = new THREE.PointsMaterial({
+  material = new THREE.PointsMaterial({
     size: parameters.size,
     sizeAttenuation: true,
     depthWrite: false,
@@ -52,7 +65,7 @@ const generateGalaxy = () => {
 
   // ######## Create Points #######
 
-  const points = new THREE.Points(geometry, material);
+  points = new THREE.Points(geometry, material);
   scene.add(points);
 };
 
