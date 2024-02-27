@@ -24,6 +24,8 @@ parameters.count = 100000;
 parameters.size = 0.01;
 // create a paranter radius for making spiral galaxy
 parameters.radius = 5;
+// branches of galaxy
+parameters.branches = 3;
 
 let geometry = null;
 let material = null;
@@ -54,10 +56,19 @@ const generateGalaxy = () => {
     // positions[i3 + 2] = (Math.random() - 0.5) * 3;
 
     // Potioning particles on straight line
+    // const radius = Math.random() * parameters.radius;
+    // positions[i3] = radius;
+    // positions[i3 + 1] = 0;
+    // positions[i3 + 2] = 0;
+
+    // Position particle on branches
     const radius = Math.random() * parameters.radius;
-    positions[i3] = radius;
+    const branchAngle =
+      ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+
+    positions[i3] = Math.cos(branchAngle) * radius;
     positions[i3 + 1] = 0;
-    positions[i3 + 2] = 0;
+    positions[i3 + 2] = Math.sin(branchAngle) * radius;
   }
 
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -108,6 +119,12 @@ gui
   .min(0.01)
   .max(20)
   .step(0.01)
+  .onFinishChange(generateGalaxy);
+gui
+  .add(parameters, "branches")
+  .min(2)
+  .max(20)
+  .step(1)
   .onFinishChange(generateGalaxy);
 
 /**
